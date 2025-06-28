@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Metock</title>
+</head>
+<body>
+    {% block content %}
+    <div class="container">
+        <a href="{% url 'video_create' %}" class="btn btn-primary mb-3">Добавить видео</a>
+    <h1>Видео</h1>
+    {% for video in videos %}
+        <div class="video">
+            <video width="600" controls>
+                <source src="{{ video.video_file.url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <p><strong>Описание:</strong> {{ video.description }}</p>
+            <p><strong>Создатель:</strong> {{ video.creator.username }}</p>
+            <p><strong>Дата создания:</strong> {{ video.created_date }}</p>
+            <p><strong>Просмотры:</strong> {{ video.count_views }}</p>
+            <p><strong>Лайки:</strong> {{ video.total_likes }}</p>
+
+            <form method="post" action="{% url 'like_video' video.id %}">
+                {% csrf_token %}
+                {% if user in video.likes.all %}
+                    <button type="submit" class="btn btn-danger">Убрать лайк</button>
+                {% else %}
+                    <button type="submit" class="btn btn-primary">Лайк</button>
+                {% endif %}
+            </form>
+
+            <h3>Комментарии:</h3>
+            <ul>
+                {% for comment in video.comments.all %}
+                    <li><strong>{{ comment.user.username }}:</strong> {{ comment.text }}</li>
+                {% empty %}
+                    <p>Комментариев пока нет.</p>
+                {% endfor %}
+            </ul>
+
+            <form method="post" action="{% url 'add_comment' video.id %}">
+                {% csrf_token %}
+                <textarea name="text" class="form-control" placeholder="Напишите комментарий..." required></textarea>
+                <button type="submit" class="btn btn-success mt-2">Добавить комментарий</button>
+            </form>
+            {% if user == video.creator %}
+                <a href="{% url 'video_edit' video.id %}" class="btn btn-warning">Редактировать</a>
+                <a href="{% url 'video_delete' video.id %}" class="btn btn-danger">Удалить</a>
+            {% endif %}
+        </div>
+        <hr>
+
+    {% endfor %}
+</div>
+    {% endblock %}
+</body>
+</html>

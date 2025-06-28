@@ -20,11 +20,12 @@ class Comments(models.Model):
 class Video(models.Model):
     id = models.AutoField(primary_key=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    description = models.CharField('Описание', max_length=100, blank=True)
     video_file = models.FileField(upload_to='videos/', null=False)
     created_date = models.DateTimeField(auto_now_add=True)
     comments = models.ManyToManyField(Comments, blank=True)
-    likes = models.IntegerField(default=0)
-    count_views = models.IntegerField(default=True)
+    likes = models.ManyToManyField(User, blank=True, related_name='liked_videos')
+    count_views = models.IntegerField(default=0)
 
     def __str__(self):
         return f"Video by {self.creator.username}"
