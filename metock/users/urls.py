@@ -1,6 +1,6 @@
 from django.urls import path
 
-from metock.users import views
+from . import views
 
 urlpatterns = [
     path('login', views.clogin, name='login'),

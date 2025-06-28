@@ -2,7 +2,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from metock.users.forms import RegisterForm
+from .forms import RegisterForm
 
 
 def clogin(request):
